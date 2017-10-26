@@ -1,0 +1,10 @@
+[
+  {
+    "ParameterKey": "CodeCommitBackupsS3Bucket",
+    "ParameterValue": "codecommit-backups"
+  }, 
+  {
+    "ParameterKey": "CodeCommitBackupsScriptsS3Bucket",
+    "ParameterValue": "codecommit-backups"
+  }
+]
