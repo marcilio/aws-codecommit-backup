@@ -12,7 +12,6 @@
 # permissions and limitations under the License.
 
 AWSTemplateFormatVersion: '2010-09-09'
-# Transform: AWS::Serverless-2016-10-31
 Parameters:
   CodeCommitBackupsScriptsS3Bucket:
     Type: "String"
@@ -20,9 +19,14 @@ Parameters:
   CodeCommitBackupsS3Bucket:
     Type: "String"
     Description: "CodeCommit Backups S3 Bucket"
+  BackupSchedule:
+    Type: "String"
+    Description: "Backup schedule as a cron expression"
+    Default: "cron(0 2 * * ? *)"
   BackupScriptsFile:
     Type: "String"
     Description: "Compressed S3 file containing backup scripts"
+    Default: "codecommit_backup_scripts.zip"
 Resources:
   CodeCommitBackupLambdaRole: 
     Type: "AWS::IAM::Role"
@@ -73,7 +77,7 @@ Resources:
     Type: "AWS::Events::Rule"
     Properties: 
       Description: "Scheduled rule for CodeCommit backups"
-      ScheduleExpression: "cron(0 2 * * ? *)"
+      ScheduleExpression: !Ref BackupSchedule
       State: "ENABLED"
       Targets: 
         - 

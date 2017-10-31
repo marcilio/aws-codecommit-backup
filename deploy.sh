@@ -15,8 +15,9 @@
 
 #----- Change these parameters to suit your environment -----#
 aws_profile="default"
-scripts_s3_bucket="codecommit-backups" # bucket must exist as it won't be created
-backups_s3_bucket="codecommit-backups" # bucket must exist as it won't be created
+backup_schedule="cron(0 2 * * ? *)"
+scripts_s3_bucket="codecommit-backups" # bucket must exist in the SAME region the deployment is taking place
+backups_s3_bucket="codecommit-backups" # bucket must exist 
 stack_name="codecommit-backups"
 #----- End of user parameters  -----#
 
@@ -33,6 +34,10 @@ aws cloudformation create-stack \
     --profile $aws_profile \
     --stack-name "${stack_name}" \
     --template-body "file://./${cfn_template}" \
-    --parameters "file://./${cfn_parameters}" \
+    --parameters \
+        ParameterKey="CodeCommitBackupsScriptsS3Bucket",ParameterValue="${scripts_s3_bucket}" \
+        ParameterKey="CodeCommitBackupsS3Bucket",ParameterValue="${backups_s3_bucket}" \
+        ParameterKey="BackupSchedule",ParameterValue="${backup_schedule}" \
+        ParameterKey="BackupScriptsFile",ParameterValue="${zipfile}" \
     --capabilities CAPABILITY_IAM
 
