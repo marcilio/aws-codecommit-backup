@@ -17,7 +17,7 @@
 aws_profile="default"
 backup_schedule="cron(0 2 * * ? *)"
 scripts_s3_bucket="codecommit-backups" # bucket must exist in the SAME region the deployment is taking place
-backups_s3_bucket="codecommit-backups" # bucket must exist 
+backups_s3_bucket="codecommit-backups" # bucket must exist and have no policy that disallows PutObject from CodeBuild
 stack_name="codecommit-backups"
 #----- End of user parameters  -----#
 
@@ -27,7 +27,7 @@ cfn_parameters="codecommit_backup_cfn_parameters.json"
 zipfile="codecommit_backup_scripts.zip"
 
 zip -r "${zipfile}" ./
-aws s3 cp "${zipfile}" "s3://${scripts_s3_bucket}"
+aws s3 --profile $aws_profile cp "${zipfile}" "s3://${scripts_s3_bucket}"
 rm -f "${zipfile}"
 
 aws cloudformation create-stack \

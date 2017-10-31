@@ -133,7 +133,7 @@ Resources:
                 Action: 
                   - "s3:putObject"
                 Resource:
-                  - !Sub "arn:aws:s3:::${CodeCommitBackupsS3Bucket}"
+                  - !Sub "arn:aws:s3:::${CodeCommitBackupsS3Bucket}/*"
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
@@ -146,6 +146,10 @@ Resources:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_MEDIUM
         Image: aws/codebuild/python:3.5.2
+        EnvironmentVariables: 
+          - 
+            Name: CodeCommitBackupsS3Bucket
+            Value: !Ref CodeCommitBackupsS3Bucket
       Source:
         Location: !Sub "arn:aws:s3:::${CodeCommitBackupsS3Bucket}/${BackupScriptsFile}"
         Type: S3
