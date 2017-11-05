@@ -15,10 +15,10 @@ AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   CodeCommitBackupsScriptsS3Bucket:
     Type: "String"
-    Description: "CodeCommit Backups S3 Bucket"
+    Description: "CodeCommit backup scripts"
   CodeCommitBackupsS3Bucket:
     Type: "String"
-    Description: "CodeCommit Backups S3 Bucket"
+    Description: "S3 Bucket for CodeCommit repository backups"
   BackupSchedule:
     Type: "String"
     Description: "Backup schedule as a cron expression"
@@ -151,6 +151,6 @@ Resources:
             Name: CodeCommitBackupsS3Bucket
             Value: !Ref CodeCommitBackupsS3Bucket
       Source:
-        Location: !Sub "arn:aws:s3:::${CodeCommitBackupsS3Bucket}/${BackupScriptsFile}"
+        Location: !Sub "arn:aws:s3:::${CodeCommitBackupsScriptsS3Bucket}/${BackupScriptsFile}"
         Type: S3
       TimeoutInMinutes: 60
