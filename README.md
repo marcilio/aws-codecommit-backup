@@ -1,7 +1,7 @@
 
 # Solution
 
-This solution uses a Amazon CloudWatch event rule and AWS Lambda function to trigger an AWS CodeBuild build on a regular basis to back up all AWS CodeCommit repositories within a particular AWS account and region. See the figure below.
+This solution uses an Amazon CloudWatch event rule and an AWS Lambda function to trigger an AWS CodeBuild container to generate a backup of all AWS CodeCommit repositories within a particular AWS account and region. The backups consists of .tar.gz files (one for each repo) named using the repo name and a timestamp and store in an S3 bucket. One can use S3 lifecycle events to automatically move old backups into Amazon Glacier (cold storage) or alternatively specify an expiration for the backup files in S3 to have them deleted after a certain period of time. See the figure below for details.
 
 ![approach-overview](codecommit_backup_approach.png)
 
