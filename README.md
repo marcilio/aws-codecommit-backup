@@ -26,8 +26,8 @@ will not be created. They must exist already. (See parameters below.)
 ```bash
 aws_profile="default"                  # default AWS profile (or choose another profile)
 backup_schedule="cron(0 2 * * ? *)"    # backups scheduled for 2am UTC, everyday
-scripts_s3_bucket="codecommit-backups" # bucket must exist in the SAME region the deployment is taking place
-backups_s3_bucket="codecommit-backups" # bucket must exist and have no policy that disallows PutObject from CodeBuild
+scripts_s3_bucket="[S3-BUCKET-FOR-BACKUP-SCRIPTS]s" # bucket must exist in the SAME region the deployment is taking place
+backups_s3_bucket="[S3-BUCKET-FOR-BACKUPS" # bucket must exist and have no policy that disallows PutObject from CodeBuild
 stack_name="codecommit-backups"        # CloudFormation stack name for the solution
 ```
 
