@@ -21,8 +21,16 @@ This project offers a serverless CodeCommit backup solution (who wants to manage
 * Make sure you have the latest version of the [AWS Command Line Interface](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) installed in your local box
 * Make sure the user in your AWS profile have permissions to create IAM roles, CloudWatch Event rules, CodeBuild projects and Lambda functions at a minimum (check your profiles under ~/.aws/credentials)
 * Open script ./deploy.sh and update these parameters as desired: AWS profile, S3 buckets, and backup schedule. The S3 buckets
-will not be created. They must exist already.
-* Important: CodeBuild requires the S3 bucket containing the backup scripts to reside in the same region as the CodeBuild build project
+will not be created. They must exist already. (See parameters below.)
+
+```bash
+aws_profile="default"                  # default AWS profile (or choose another profile)
+backup_schedule="cron(0 2 * * ? *)"    # backups scheduled for 2am UTC, everyday
+scripts_s3_bucket="codecommit-backups" # bucket must exist in the SAME region the deployment is taking place
+backups_s3_bucket="codecommit-backups" # bucket must exist and have no policy that disallows PutObject from CodeBuild
+stack_name="codecommit-backups"        # CloudFormation stack name for the solution
+```
+
 * By default, all CodeCommit repositories within the AWS region where the solution was deployed to will be backed up everyday at 2am UTC `(cron(0 2 * * ? *))` into the S3 bucket specified
 * Run script ./deploy.sh to deploy the solution into your AWS account
 
