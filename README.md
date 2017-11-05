@@ -7,7 +7,7 @@ are also deleted for good. Oops.
 
 As per [AWS documentation](https://aws.amazon.com/codecommit/faqs/): _"Deleting an AWS CodeCommit repository is a destructive one-way operation that cannot be undone. To restore a deleted repository, you will need to create the repository again and use either a backup or a local copy from a full clone to upload the data_". 
 
-So, having a backup handy is not a bad idea - Better safe then sorry!
+So, having a backup handy is not a bad idea - Better safe than sorry!
 
 # The Solution
 
