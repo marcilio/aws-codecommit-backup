@@ -14,7 +14,7 @@
 import boto3
 client = boto3.client('codebuild')
 def handler(event, context): 
-    response = client.start_build(projectName='${CodeBuildProject}')
-    output = "Triggered CodeBuild project: 'CodeCommitBackup' to back all CodeCommit repos. Status={}".format(response["build"]["buildStatus"])
+    response = client.start_build(projectName='CodeCommitBackup')
+    output = "Triggered CodeBuild project: 'CodeCommitBackup' to back all CodeCommit repos in this account/region. Status={}".format(response["build"]["buildStatus"])
     print(output)
     return output
