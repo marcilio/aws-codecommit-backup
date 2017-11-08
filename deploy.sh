@@ -16,8 +16,8 @@
 #----- Change these parameters to suit your environment -----#
 aws_profile="default"
 backup_schedule="cron(0 2 * * ? *)"
-# scripts_s3_bucket="[S3-BUCKET-FOR-BACKUP-SCRIPTS]" # bucket must exist in the SAME region the deployment is taking place
-# backups_s3_bucket="[S3-BUCKET-FOR-BACKUPS]" # bucket must exist and have no policy that disallows PutObject from CodeBuild
+scripts_s3_bucket="[S3-BUCKET-FOR-BACKUP-SCRIPTS]" # bucket must exist in the SAME region the deployment is taking place
+backups_s3_bucket="[S3-BUCKET-FOR-BACKUPS]" # bucket must exist and have no policy that disallows PutObject from CodeBuild
 stack_name="codecommit-backups"
 #----- End of user parameters  -----#
 
