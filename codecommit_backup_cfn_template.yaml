@@ -12,6 +12,7 @@
 # permissions and limitations under the License.
 
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
 Parameters:
   CodeCommitBackupsScriptsS3Bucket:
     Type: "String"
@@ -56,23 +57,14 @@ Resources:
                   - "codebuild:StartBuild"
                 Resource: !GetAtt CodeBuildProject.Arn
   CodeCommitBackupLambda:
-    Type: AWS::Lambda::Function
+    Type: AWS::Serverless::Function
     Properties:
       FunctionName: CodeCommitBackupLambda
-      Handler: index.handler
+      Handler: codecommit_backup_trigger_lambda.handler
       Runtime: python3.6
       MemorySize: 128
       Timeout: 30
       Role: !GetAtt CodeCommitBackupLambdaRole.Arn
-      Code:
-        ZipFile: !Sub |
-          import boto3
-          client = boto3.client('codebuild')
-          def handler(event, context): 
-              response = client.start_build(projectName='${CodeBuildProject}')
-              output = "Triggered CodeBuild project: 'CodeCommitBackup' to back all CodeCommit repos. Status={}".format(response["build"]["buildStatus"])
-              print(output)
-              return output
   CodeCommitBackupScheduledRule: 
     Type: "AWS::Events::Rule"
     Properties: 

@@ -16,8 +16,10 @@
 #----- Change these parameters to suit your environment -----#
 aws_profile="default"
 backup_schedule="cron(0 2 * * ? *)"
-scripts_s3_bucket="[S3-BUCKET-FOR-BACKUP-SCRIPTS]" # bucket must exist in the SAME region the deployment is taking place
-backups_s3_bucket="[S3-BUCKET-FOR-BACKUPS]" # bucket must exist and have no policy that disallows PutObject from CodeBuild
+# scripts_s3_bucket="[S3-BUCKET-FOR-BACKUP-SCRIPTS]" # bucket must exist in the SAME region the deployment is taking place
+# backups_s3_bucket="[S3-BUCKET-FOR-BACKUPS]" # bucket must exist and have no policy that disallows PutObject from CodeBuild
+scripts_s3_bucket="codecommit-backups" # bucket must exist in the SAME region the deployment is taking place
+backups_s3_bucket="codecommit-backups" # bucket must exist and have no policy that disallows PutObject from CodeBuild
 stack_name="codecommit-backups"
 #----- End of user parameters  -----#
 
@@ -25,19 +27,25 @@ stack_name="codecommit-backups"
 cfn_template="codecommit_backup_cfn_template.yaml"
 cfn_parameters="codecommit_backup_cfn_parameters.json"
 zipfile="codecommit_backup_scripts.zip"
+cfn_gen_template="/tmp/gen_codecommit_backup_cfn_template.yaml"
 
 zip -r "${zipfile}" ./
 aws s3 --profile $aws_profile cp "${zipfile}" "s3://${scripts_s3_bucket}"
 rm -f "${zipfile}"
 
-aws cloudformation create-stack \
+aws cloudformation package \
+    --template-file "${cfn_template}" \
+    --s3-bucket "$scripts_s3_bucket" \
+    --output-template-file "$cfn_gen_template"
+
+aws cloudformation deploy \
     --profile $aws_profile \
     --stack-name "${stack_name}" \
-    --template-body "file://./${cfn_template}" \
-    --parameters \
-        ParameterKey="CodeCommitBackupsScriptsS3Bucket",ParameterValue="${scripts_s3_bucket}" \
-        ParameterKey="CodeCommitBackupsS3Bucket",ParameterValue="${backups_s3_bucket}" \
-        ParameterKey="BackupSchedule",ParameterValue="${backup_schedule}" \
-        ParameterKey="BackupScriptsFile",ParameterValue="${zipfile}" \
+    --template-file "${cfn_gen_template}" \
+    --parameter-overrides \
+        CodeCommitBackupsScriptsS3Bucket="${scripts_s3_bucket}" \
+        CodeCommitBackupsS3Bucket="${backups_s3_bucket}" \
+        BackupSchedule="${backup_schedule}" \
+        BackupScriptsFile="${zipfile}" \
     --capabilities CAPABILITY_IAM
 
